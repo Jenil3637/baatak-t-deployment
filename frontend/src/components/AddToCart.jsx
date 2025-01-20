@@ -65,7 +65,7 @@ const AddToCart = () => {
         totalPrice: total.toFixed(2), 
       };
 
-      await axios.post(`${import.meta.env.VITE_REACT_APP_BACKEND_BASEURL}/api/v1/customer/cart`, orderData);
+      await axios.post('https://baattak.onrender.com/api/v1/customer/cart', orderData);
 
 
       console.log('Order submitted:', orderData); 
