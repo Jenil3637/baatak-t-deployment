@@ -1,85 +1,50 @@
-// import Cart from '../models/Cart.model.js';  // Import the Cart model
-
-// const CartController = {
-//     // Create a new cart
-//     createCart: async (req, res) => {
-//         try {
-//             const { user, items, totalQuantity, totalPrice } = req.body;
-
-//             // Validate if the user is provided
-//             if (!user || user.trim() === '') {
-//                 return res.status(400).json({ message: 'User name is required' });
-//             }
-
-//             // Create and save the cart
-//             const newCart = new Cart({ user, items, totalQuantity, totalPrice });
-//             await newCart.save();
-
-//             res.status(201).json({ message: 'Cart created successfully', cart: newCart });
-//         } catch (error) {
-//             res.status(500).json({ message: 'Error creating cart', error: error.message });
-//         }
-//     },
-
-//     // Get all carts
-//     getAllCarts: async (req, res) => {
-//         try {
-//             const carts = await Cart.find();  // No need to populate 'items.dish' since dish is removed
-//             res.status(200).json({ carts });
-//         } catch (error) {
-//             res.status(500).json({ message: 'Error fetching carts', error: error.message });
-//         }
-//     },
-
-//     // Get a single cart by user name
-//     getCartByUser: async (req, res) => {
-//         try {
-//             const { user } = req.params;  // Get the user name from the URL
-//             const cart = await Cart.findOne({ user });
-
-//             if (!cart) {
-//                 return res.status(404).json({ message: 'Cart not found for this user' });
-//             }
-
-//             res.status(200).json({ cart });
-//         } catch (error) {
-//             res.status(500).json({ message: 'Error fetching cart', error: error.message });
-//         }
-//     },
-// };
-
-// export default CartController;
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import Cart from '../models/Cart.model.js';  // Import the Cart model
 import OrderHistory from '../models/OrderHistory.model.js';  // Import the OrderHistory model
+import User from '../models/User.model.js'; // Import the User model
 
 const CartController = {
     // Create a new cart
+
     createCart: async (req, res) => {
         try {
             const { user, phoneNumber, items, totalQuantity, totalPrice } = req.body;
-
+    
             if (!user || user.trim() === '') {
                 return res.status(400).json({ message: 'User name is required' });
             }
             if (!phoneNumber || phoneNumber.trim() === '') {
                 return res.status(400).json({ message: 'Phone number is required' });
             }
-
+    
+            // Check if the user exists in the User model
+            let existingUser = await User.findOne({ username: user, phoneNumber });
+    
+            if (!existingUser) {
+                // Create a new user if it doesn't exist
+                existingUser = new User({
+                    username: user,
+                    phoneNumber,
+                });
+                await existingUser.save();
+            } else {
+                // Optionally, update the user's phone number if needed
+                existingUser.phoneNumber = phoneNumber;
+                await existingUser.save();
+            }
+    
+            // Create a new cart
             const newCart = new Cart({ user, phoneNumber, items, totalQuantity, totalPrice });
             await newCart.save();
-
+    
             newCart.createdAt = new Date();
             await newCart.save();
-
-            res.status(201).json({ message: 'Cart created successfully', cart: newCart });
+    
+            res.status(201).json({ message: 'Cart created successfully and user saved/updated', cart: newCart });
         } catch (error) {
             res.status(500).json({ message: 'Error creating cart', error: error.message });
         }
     },
+    
 
     // Get all carts
     getAllCarts: async (req, res) => {
