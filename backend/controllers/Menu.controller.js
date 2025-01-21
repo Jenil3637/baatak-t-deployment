@@ -3,9 +3,10 @@ import MenuItem from '../models/MenuItems.model.js';
 import cloudinary from 'cloudinary';
 import path from 'path';
 import dotenv from 'dotenv';
+import path from 'path';
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from the root .env file
+dotenv.config({ path: path.resolve(__dirname, '../.env') });  // Adjust path if needed
 
 // Configure Cloudinary using environment variables
 cloudinary.v2.config({
@@ -13,6 +14,7 @@ cloudinary.v2.config({
   api_key: process.env.API_KEY,        // Cloudinary api_key from .env
   api_secret: process.env.API_SECRET,  // Cloudinary api_secret from .env
 });
+
 
 // Multer configuration for image upload
 const storage = multer.diskStorage({
