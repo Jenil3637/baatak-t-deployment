@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./db/database.js";
 import CartRoutes from "./routes/Cart.routes.js";
 import UserRoutes from "./routes/User.routes.js";
+import MenuRoutes from "./routes/menu.routes.js";
 import path from "path";
 
 // Load environment variables
@@ -19,10 +20,10 @@ app.use(cookieParser());
 app.use(urlencoded({ extended: true }));
 
 
-// CORS Configuration
+// CORS Configuration 
 const corsOptions = {
     origin: [
-        "https://baattak.onrender.com" , 
+        "https://baattak.onrender.com" ,  
         "http://localhost:5173"
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -36,6 +37,7 @@ app.use(cors(corsOptions));
 // Routes
 app.use("/api/v1/customer", CartRoutes);
 app.use("/api/v1/customer", UserRoutes);
+app.use("/api/v1/customer", MenuRoutes)
 
 // Database connection and server start
 app.use(express.static(path.join(__dirname, "frontend/dist")));
