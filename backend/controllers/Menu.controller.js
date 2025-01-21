@@ -3,8 +3,6 @@ import MenuItem from '../models/MenuItems.model.js';
 import cloudinary from 'cloudinary';
 import path from 'path';
 import dotenv from 'dotenv';
-import path from 'path';
-
 // Load environment variables from the root .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });  // Adjust path if needed
 
