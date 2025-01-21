@@ -1,8 +1,12 @@
 import multer from 'multer';
 import MenuItem from '../models/MenuItems.model.js';
 import cloudinary from 'cloudinary';
-import path from 'path';
 import dotenv from 'dotenv';
+import path from 'path';
+
+// Get the directory of the current module using import.meta.url
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 // Load environment variables from the root .env file
 dotenv.config({ path: path.resolve(__dirname, '../.env') });  // Adjust path if needed
 
