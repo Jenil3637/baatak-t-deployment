@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import { FaHeart, FaPlusCircle, FaUtensils, FaLayerGroup, FaCandyCane, FaBars, FaTimes, FaShoppingCart } from 'react-icons/fa';
+import { FaHeart, FaPlusCircle, FaUtensils, FaLayerGroup, FaCandyCane, FaBars, FaTimes, FaBeer, FaShoppingCart } from 'react-icons/fa';
 import logo from '../assets/logo.png';
 import { useCart } from './CartContext'; // Assuming useCart is from your CartContext
 
@@ -17,11 +17,12 @@ const Navbar = () => {
 
   const navItems = [
     { to: "/favorites", icon: FaHeart, label: "Favorites" },
-    { to: "/new", icon: FaPlusCircle, label: "New" },
+    { to: "/drinks", icon: FaBeer, label: "Drinks" },
     { to: "/lunch", icon: FaUtensils, label: "Lunch" },
     { to: "/combo", icon: FaLayerGroup, label: "Combo" },
-    { to: "/sweet", icon: FaCandyCane, label: "Sweet" }
+    { to: "/sweet", icon: FaCandyCane, label: "Sweet" },
   ];
+  
 
   const handleLogoClick = () => {
     setIsOpen(false); // Close the hamburger menu

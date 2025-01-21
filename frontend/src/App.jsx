@@ -8,6 +8,7 @@ import Lunch from '../src/components/Lunch';
 import Combo from '../src/components/Combo';
 import Sweet from '../src/components/Sweet';
 import AddToCart from '../src/components/AddToCart';
+import Drink from '../src/components/Drink';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/favorites" element={<Favorites />} />
-              <Route path="/new" element={<Newww />} />
+              <Route path="/drinks" element={<Drink />} />
               <Route path="/lunch" element={<Lunch />} />
               <Route path="/combo" element={<Combo />} />
               <Route path="/sweet" element={<Sweet />} />
