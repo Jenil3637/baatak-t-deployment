@@ -2,12 +2,16 @@ import multer from 'multer';
 import MenuItem from '../models/MenuItems.model.js';
 import cloudinary from 'cloudinary';
 import path from 'path';
+import dotenv from 'dotenv';
 
-// Configure Cloudinary
+// Load environment variables
+dotenv.config();
+
+// Configure Cloudinary using environment variables
 cloudinary.v2.config({
-  cloud_name: 'dfgadbqq1',  // Ensure the cloud_name is correct (check Cloudinary dashboard)
-  api_key: '145315697187333',
-  api_secret: 'PB4xzH5rXnY93Rp8OC5wn5lp4Iw',
+  cloud_name: process.env.CLOUD_NAME,  // Cloudinary cloud_name from .env
+  api_key: process.env.API_KEY,        // Cloudinary api_key from .env
+  api_secret: process.env.API_SECRET,  // Cloudinary api_secret from .env
 });
 
 // Multer configuration for image upload
