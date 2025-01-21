@@ -5,10 +5,21 @@ export const createUser = async (req, res) => {
     try {
         const { username, phoneNumber, email } = req.body;
 
+        // Treat empty email as null
+        const validEmail = email === "" ? null : email;
+
+        // Create a filter for checking duplicates
+        const filter = { 
+            $or: [{ username }, { phoneNumber }]
+        };
+
+        // Add email to the filter if provided (not null or empty string)
+        if (validEmail) {
+            filter.$or.push({ email: validEmail });
+        }
+
         // Check if a user already exists with the same username, phone number, or email
-        const existingUser = await User.findOne({
-            $or: [{ username }, { phoneNumber }, { email: email || null }] // Allow email to be null
-        });
+        const existingUser = await User.findOne(filter);
 
         if (existingUser) {
             return res.status(400).json({ message: 'Username, phone number, or email already in use.' });
@@ -18,22 +29,11 @@ export const createUser = async (req, res) => {
         const newUser = new User({
             username,
             phoneNumber,
-            email: email || null // Ensure email is set to null if not provided
+            email: validEmail // Set email to null if empty string
         });
 
         await newUser.save();
         res.status(201).json({ message: 'User created successfully!', user: newUser });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-
-// Controller to get all users
-export const getUsers = async (req, res) => {
-    try {
-        const users = await User.find();
-        res.status(200).json(users);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -53,9 +53,22 @@ export const editUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Treat empty email as null
+        const validEmail = email === "" ? null : email;
+
+        // Create a filter for checking duplicates, excluding the current user
+        const filter = { 
+            $or: [{ username }, { phoneNumber }]
+        };
+
+        // Add email to the filter if provided (not null or empty string), and exclude the current user
+        if (validEmail) {
+            filter.$or.push({ email: validEmail });
+        }
+
         // Check if the updated username, phone number, or email already exists (except for the current user)
         const existingUser = await User.findOne({
-            $or: [{ username }, { phoneNumber }, { email }],
+            ...filter,
             _id: { $ne: id } // Exclude the current user from the check
         });
 
@@ -66,11 +79,21 @@ export const editUser = async (req, res) => {
         // Update user details
         user.username = username || user.username;
         user.phoneNumber = phoneNumber || user.phoneNumber;
-        user.email = email || user.email;
+        user.email = validEmail || user.email;
 
         await user.save();
 
         res.status(200).json({ message: 'User updated successfully!', user });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+export const getUsers = async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).json(users);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });

@@ -1,27 +1,37 @@
 import multer from 'multer';
 import MenuItem from '../models/MenuItems.model.js';
 import cloudinary from 'cloudinary';
-import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
+import dotenv from 'dotenv';
 
-// Get the directory of the current module using import.meta.url
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+import { fileURLToPath } from 'url';
 
-// Load environment variables from the root .env file
-dotenv.config({ path: path.resolve(__dirname, '../.env') });  // Adjust path if needed
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Configure Cloudinary using environment variables
+// Load environment variables without specifying the path (assuming .env is in the root)
+dotenv.config();
+
+// console.log('CLOUD_NAME:', process.env.CLOUD_NAME);  // Should print 'dfgadbqq1'
+// console.log('API_KEY:', process.env.API_KEY);        // Should print your API key
+// console.log('API_SECRET:', process.env.API_SECRET);  // Should print your API secret
+
 cloudinary.v2.config({
-  cloud_name: process.env.CLOUD_NAME,  // Cloudinary cloud_name from .env
-  api_key: process.env.API_KEY,        // Cloudinary api_key from .env
-  api_secret: process.env.API_SECRET,  // Cloudinary api_secret from .env
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
-
 
 // Multer configuration for image upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Folder to store uploaded images
+    const uploadDir = 'uploads/';
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir); // Folder to store uploaded images
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Unique file name
@@ -63,10 +73,13 @@ export const createMenuItem = async (req, res) => {
     });
 
     await newItem.save();
+    // Delete the local file after upload to Cloudinary
+    fs.unlinkSync(file.path);
+
     res.status(201).json(newItem);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to create menu item.' });
+    console.error('Error creating menu item:', error);
+    res.status(500).json({ error: 'Failed to create menu item', details: error.message });
   }
 };
 
@@ -78,6 +91,7 @@ export const getAllMenuItems = async (req, res) => {
     const items = await MenuItem.find();
     res.status(200).json(items);
   } catch (error) {
+    console.error('Error fetching menu items:', error);
     res.status(500).json({ error: 'Failed to fetch menu items.' });
   }
 };
@@ -92,31 +106,29 @@ export const updateMenuItem = async (req, res) => {
       { name, description, price, category },
       { new: true }
     );
-    
+
     if (!updatedItem) {
       return res.status(404).json({ error: 'Menu item not found.' });
     }
 
     res.status(200).json(updatedItem);
   } catch (error) {
-    console.error(error);
+    console.error('Error updating menu item:', error);
     res.status(500).json({ error: 'Failed to update menu item.' });
   }
 };
 
-// backend/controllers/Menu.controller.js
-// backend/controllers/Menu.controller.js
+// Delete Menu Item
 export const deleteMenuItem = async (req, res) => {
-    try {
-      const { id } = req.params;
-      const item = await MenuItem.findByIdAndDelete(id);
-      if (!item) {
-        return res.status(404).json({ message: 'Menu item not found' });
-      }
-      res.status(200).json({ message: 'Menu item deleted successfully' });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Failed to delete item' });
+  try {
+    const { id } = req.params;
+    const item = await MenuItem.findByIdAndDelete(id);
+    if (!item) {
+      return res.status(404).json({ message: 'Menu item not found' });
     }
-  };
-  
+    res.status(200).json({ message: 'Menu item deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting menu item:', error);
+    res.status(500).json({ message: 'Failed to delete item' });
+  }
+};

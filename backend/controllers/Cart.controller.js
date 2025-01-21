@@ -7,6 +7,7 @@ const CartController = {
 
     createCart: async (req, res) => {
         try {
+            console.log('Request Body:', req.body);
             const { user, phoneNumber, items, totalQuantity, totalPrice } = req.body;
     
             if (!user || user.trim() === '') {

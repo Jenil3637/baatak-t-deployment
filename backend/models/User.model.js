@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     email: { 
         type: String,
         match: [/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'Please fill a valid email address'],
-        default: null
+        sparse: true
     }
 }, {
     timestamps: true // Automatically add createdAt and updatedAt fields
