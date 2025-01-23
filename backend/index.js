@@ -6,6 +6,7 @@ import connectDB from "./db/database.js";
 import CartRoutes from "./routes/Cart.routes.js";
 import UserRoutes from "./routes/User.routes.js";
 import MenuRoutes from "./routes/menu.routes.js";
+import OrderRoutes from "./routes/OrderHistory.routes.js";  
 import path from "path";
 
 // Load environment variables
@@ -38,6 +39,7 @@ app.use(cors(corsOptions));
 app.use("/api/v1/customer", CartRoutes);
 app.use("/api/v1/customer", UserRoutes);
 app.use("/api/v1/customer", MenuRoutes)
+app.use("/api/v1/customer", OrderRoutes)
 
 // Database connection and server start
 app.use(express.static(path.join(__dirname, "frontend/dist")));

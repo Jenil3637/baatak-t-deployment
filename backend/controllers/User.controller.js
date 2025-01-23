@@ -118,3 +118,27 @@ export const deleteUser = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+// Controller to get the count of users created in the past week
+export const getCountByNextWeek = async (req, res) => {
+    try {
+        // Get the current date
+        const currentDate = new Date();
+
+        // Calculate the date 7 days ago
+        const lastWeekDate = new Date(currentDate);
+        lastWeekDate.setDate(currentDate.getDate() - 7);
+
+        // Count users who were created in the last 7 days
+        const userCount = await User.countDocuments({
+            createdAt: { $gte: lastWeekDate }
+        });
+
+        res.status(200).json({ count: userCount });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+ 

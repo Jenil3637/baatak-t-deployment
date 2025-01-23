@@ -132,34 +132,36 @@ const CartController = {
 
     moveToOrderHistoryById: async (req, res) => {
         try {
-            const { cartId } = req.params;
-    
-            // Find the cart by ID
-            const cart = await Cart.findById(cartId);
-    
-            if (!cart) {
-                return res.status(404).json({ message: 'Cart not found' });
-            }
-    
-            // Create a new order in the OrderHistory collection
-            const newOrder = new OrderHistory({
-                user: cart.user,
-                phoneNumber: cart.phoneNumber,
-                items: cart.items,
-                totalQuantity: cart.totalQuantity,
-                totalPrice: cart.totalPrice,
-            });
-    
-            await newOrder.save(); // Save order to history
-    
-            // Delete the cart after saving to order history
-            await Cart.deleteOne({ _id: cartId });
-    
-            res.status(200).json({ message: 'Order moved to order history and deleted from real-time orders' });
+          const { cartId } = req.params;
+      
+          // Ensure the `cartId` is valid
+          const cart = await Cart.findById(cartId);
+      
+          if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+          }
+      
+          // Save order to OrderHistory
+          const newOrder = new OrderHistory({
+            user: cart.user,
+            phoneNumber: cart.phoneNumber,
+            items: cart.items,
+            totalQuantity: cart.totalQuantity,
+            totalPrice: cart.totalPrice,
+          });
+      
+          await newOrder.save();
+      
+          // Delete the cart
+          await Cart.deleteOne({ _id: cartId });
+      
+          res.status(200).json({ message: 'Order moved to order history and deleted from real-time orders' });
         } catch (error) {
-            res.status(500).json({ message: 'Error moving order to history', error: error.message });
+          console.error('Error in moveToOrderHistoryById:', error);
+          res.status(500).json({ message: 'Error moving order to history', error: error.message });
         }
-    },
+      },
+      
     
 };
 
