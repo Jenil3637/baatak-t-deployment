@@ -278,8 +278,6 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 import React, { useState } from 'react';
 import { useCart } from './CartContext';
 import { FaTrash, FaMinus, FaPlus } from 'react-icons/fa';
@@ -374,11 +372,6 @@ const AddToCart = () => {
               >
                 <div className="p-3 sm:p-4">
                   <div className="flex items-start space-x-3 sm:space-x-4">
-                    <img
-                      src={item.imageUrl || 'https://via.placeholder.com/150'}
-                      alt={item.name}
-                      className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md shadow-sm flex-shrink-0"
-                    />
                     <div className="flex-1 min-w-0">
                       <h2 className="text-sm sm:text-base font-semibold text-gray-800 truncate">
                         {item.name}
