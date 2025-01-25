@@ -25,7 +25,8 @@ app.use(urlencoded({ extended: true }));
 const corsOptions = {
     origin: [
         "https://baattak.onrender.com" ,  
-        "http://localhost:5173"
+        "http://localhost:5173" ,
+        "http://localhost:5000" ,
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true, // Allow sending cookies and other credentials

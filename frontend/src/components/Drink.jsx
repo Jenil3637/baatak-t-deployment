@@ -14,6 +14,7 @@ const Drink = () => {
         const data = await response.json();
         // Filter items with the "combo" category
         const drinkItems = data.filter((item) => item.category === "Drink");
+        console.log(drinkItems);
         setProducts(drinkItems);
       } catch (err) {
         setError("Failed to fetch menu items.");
