@@ -465,7 +465,7 @@ const Dashboard = () => {
                             <div key={product.id} className="relative w-full h-80 shadow-lg cursor-pointer transition-all duration-150 flex items-center justify-center bg-white hover:scale-105 active:scale-95 group rounded-lg">
                                 <div className="w-full h-full relative">
                                     <img
-                                        src={product.image || "https://via.placeholder.com/300"}
+                                        src={product.imageUrl || "https://via.placeholder.com/300"}
                                         alt={product.name}
                                         className="w-full h-full object-cover rounded-lg"
                                     />
