@@ -28,6 +28,7 @@ const corsOptions = {
         "http://localhost:5173" ,
         "http://localhost:5000" ,
         "http://localhost:5174" ,
+        "https://baattak-billing.vercel.app"
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true, // Allow sending cookies and other credentials
