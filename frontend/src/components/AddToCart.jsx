@@ -105,7 +105,7 @@ const AddToCart = () => {
                 <div className="p-3 sm:p-4">
                   <div className="flex items-start space-x-3 sm:space-x-4">
                     <img
-                      src={item.image}
+                      src={item.imageUrl}
                       alt={item.name}
                       className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md shadow-sm flex-shrink-0"
                     />
